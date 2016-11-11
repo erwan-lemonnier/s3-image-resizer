@@ -1,5 +1,6 @@
 import logging
 import requests
+from io import BytesIO
 from PIL import Image
 from StringIO import StringIO
 from boto import s3
@@ -49,10 +50,46 @@ class S3ImageResizer(object):
         if not self.image:
             raise RTFMException("No image loaded! You must call fetch() before resize()")
 
+        # TODO: self.image = self.image.copy()
         raise Exception("Not implemented!")
 
-    def store(self, to_bucket=None, key_name=None, metadata=None):
+    def store(self, in_bucket=None, key_name=None, metadata=None):
         """Store the loaded image into the given bucket with the given key name. Tag
         it with metadata if provided. Make the Image public and return its url"""
+        if not in_bucket:
+            raise InvalidParameterException("No in_bucket specified")
+        if not key_name:
+            raise InvalidParameterException("No key_name specified")
+        if not self.image:
+            raise RTFMException("No image loaded! You must call fetch() before store()")
 
-        raise Exception("Not implemented!")
+        if metadata:
+            assert type(metadata) is dict
+        else:
+            metadata = {}
+
+        metadata['Content-Type'] = 'image/jpeg'
+
+        # Export image to a string
+        sio = StringIO()
+        self.image.save(sio, 'JPEG')
+        contents = sio.getvalue()
+        sio.close()
+
+        # Get the bucket
+        bucket = self.s3_conn.get_bucket(in_bucket)
+
+        # Create a key containing the image. Make it public
+        k = Key(bucket)
+        k.key = key_name
+        k.set_contents_from_string(contents)
+        k.set_remote_metadata(metadata, {}, True)
+        k.set_acl('public-read')
+
+        # Return the key's public url
+        return k.generate_url(
+            method='GET',
+            expires_in=0,
+            query_auth=False,
+            force_http=False
+        )

@@ -31,7 +31,7 @@ for url in urls:
     i.resize(
         width=200
     ).store(
-        to_bucket='my-images',
+        in_bucket='my-images',
         key_name='image-w200-jpg'
     )
 
@@ -39,7 +39,7 @@ for url in urls:
     i.resize(
         height=200
     ).store(
-        to_bucket='my-images',
+        in_bucket='my-images',
         key_name='image-h200-jpg'
     )
 ```
