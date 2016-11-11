@@ -37,6 +37,8 @@ setup(
     description='Import and resize pictures into amazon S3 storage',
     install_requires=[
         'Pillow',
+        'boto',
+        'requests',
     ],
     tests_require=[
     ],
