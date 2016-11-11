@@ -16,7 +16,7 @@ class S3ImageResizer(object):
         self.image = None
 
     def fetch(self, url):
-        """Fetch an image and keep it in memeory"""
+        """Fetch an image and keep it in memory"""
         assert url
         raise Exception("Not implemented!")
 

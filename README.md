@@ -17,24 +17,31 @@ Typical usecase:
 # s3_conn = s3.connect_to_region(...)
 i = S3ImageResizer(s3_conn)
 
-# Fetch an image into memory
-i.fetch('http://www.gokqsw.com/images/picture/picture-4.jpg')
+urls = [
+    'http://www.gokqsw.com/images/picture/picture-3.jpg',
+    'http://www.gokqsw.com/images/picture/picture-4.jpg'
+]
 
-# Resize the image and store it to S3
-i.resize(
-    width=200
-).store(
-    to_bucket='my-images',
-    key_name='image-w200-jpg'
-)
+for url in urls:
 
-# And once more, with a different size
-i.resize(
-    height=200
-).store(
-    to_bucket='my-images',
-    key_name='image-h200-jpg'
-)
+    # Fetch an image into memory
+    i.fetch(url)
+
+    # Resize the image and store it to S3
+    i.resize(
+        width=200
+    ).store(
+        to_bucket='my-images',
+        key_name='image-w200-jpg'
+    )
+
+    # And once more, with a different size
+    i.resize(
+        height=200
+    ).store(
+        to_bucket='my-images',
+        key_name='image-h200-jpg'
+    )
 ```
 
 ## Installation
