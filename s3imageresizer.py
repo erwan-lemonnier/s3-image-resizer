@@ -64,7 +64,8 @@ class S3ImageResizer(object):
             raise RTFMException("No image loaded! You must call fetch() before store()")
 
         if metadata:
-            assert type(metadata) is dict
+            if type(metadata) is not dict:
+                raise RTFMException("metadata must be a dict")
         else:
             metadata = {}
 
