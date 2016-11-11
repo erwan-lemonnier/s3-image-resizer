@@ -1,4 +1,4 @@
-# s3pictresizer
+# s3imageresizer
 
 A python module to import and resize pictures into amazon S3 storage.
 
@@ -39,7 +39,7 @@ i.resize(
 
 ## Installation
 
-s3pictresizer requires Pillow, which in turn needs external libraries.
+s3imageresizer requires Pillow, which in turn needs external libraries.
 On ubuntu, you would for example need:
 
 ```
@@ -49,5 +49,5 @@ sudo apt-get install libjpeg8 libjpeg8-dev libopenjpeg-dev
 Then
 
 ```
-pip install s3pictresizer
+pip install s3imageresizer
 ```
