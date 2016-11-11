@@ -66,7 +66,7 @@ class S3ImageResizer(object):
         # Return a clone of self, loaded with the resized image
         clone = S3ImageResizer(self.s3_conn)
         log.info("Resizing image from (%s, %s) to (%s, %s)" % (cur_width, cur_height, to_width, to_height))
-        clone.image = self.image.resize((to_width, to_height))
+        clone.image = self.image.resize((to_width, to_height), Image.ANTIALIAS)
 
         return clone
 
