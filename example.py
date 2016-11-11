@@ -26,6 +26,7 @@ ch.setLevel(logging.DEBUG)
 formatter = logging.Formatter('%(asctime)s: %(levelname)s %(message)s')
 ch.setFormatter(formatter)
 root.addHandler(ch)
+logging.getLogger('boto').setLevel(logging.INFO)
 # EOF logging setup. Pfew.
 
 
@@ -44,6 +45,35 @@ url = i.store(
     key_name='raw.jpg'
 )
 log.info("Got url %s" % url)
+
 # Should be 'https://pnt-tests.s3-eu-west-1.amazonaws.com/raw.jpg'
 want = 'https://%s.s3-%s.amazonaws.com/%s' % (BUCKET_NAME, S3_REGION, 'raw.jpg')
 assert url == want, '%s == %s' % (url, want)
+
+# resize to width 200
+ii = i.resize(width=200)
+url_w200 = ii.store(
+    in_bucket=BUCKET_NAME,
+    key_name='raw_w200.jpg'
+)
+log.info("Got url %s" % url_w200)
+
+# Should get 'https://pnt-tests.s3-eu-west-1.amazonaws.com/raw_w200.jpg'
+want = 'https://%s.s3-%s.amazonaws.com/%s' % (BUCKET_NAME, S3_REGION, 'raw_w200.jpg')
+assert url_w200 == want, '%s == %s' % (url_w200, want)
+
+# resize to height 200
+ii = i.resize(height=200)
+url_h200 = ii.store(
+    in_bucket=BUCKET_NAME,
+    key_name='raw_h200.jpg'
+)
+log.info("Got url %s" % url_h200)
+
+# resize to a 100 square
+ii = i.resize(width=100, height=100)
+url_w100_h100 = ii.store(
+    in_bucket=BUCKET_NAME,
+    key_name='raw_w100_h100.jpg'
+)
+log.info("Got url %s" % url_w100_h100)

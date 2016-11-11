@@ -27,8 +27,9 @@ for url in urls:
     # Fetch an image into memory
     i.fetch(url)
 
-    # Resize the image and store it to S3
-    i.resize(
+    # Resize the image and store it to S3, and discard the resized
+    # image once stored
+    url1 = i.resize(
         width=200
     ).store(
         in_bucket='my-images',
@@ -36,7 +37,7 @@ for url in urls:
     )
 
     # And once more, with a different size
-    i.resize(
+    url2 = i.resize(
         height=200
     ).store(
         in_bucket='my-images',

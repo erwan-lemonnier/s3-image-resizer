@@ -31,6 +31,7 @@ class S3ImageResizer(object):
         self.s3_conn = s3_conn
         self.image = None
 
+
     def fetch(self, url):
         """Fetch an image and keep it in memory"""
         assert url
@@ -40,18 +41,35 @@ class S3ImageResizer(object):
             raise CantFetchImageException("Failed to load image at url %s" % url)
         self.image = Image.open(StringIO(res.content))
 
+
     def resize(self, width=None, height=None):
         """Resize the in-memory image previously fetched, and
         return a clone of self holding the resized image"""
         if not width and not height:
             raise InvalidParameterException("One of width or height must be specified")
-        if width and height:
-            raise InvalidParameterException("Only one of width or height must be specified")
         if not self.image:
             raise RTFMException("No image loaded! You must call fetch() before resize()")
 
-        # TODO: self.image = self.image.copy()
-        raise Exception("Not implemented!")
+        cur_width = self.image.width
+        cur_height = self.image.height
+
+        if width and height:
+            to_width = width
+            to_height = height
+        elif width:
+            to_width = width
+            to_height = int(cur_height * width / cur_width)
+        elif height:
+            to_width = int(cur_width * height / cur_height)
+            to_height = height
+
+        # Return a clone of self, loaded with the resized image
+        clone = S3ImageResizer(self.s3_conn)
+        log.info("Resizing image from (%s, %s) to (%s, %s)" % (cur_width, cur_height, to_width, to_height))
+        clone.image = self.image.resize((to_width, to_height))
+
+        return clone
+
 
     def store(self, in_bucket=None, key_name=None, metadata=None):
         """Store the loaded image into the given bucket with the given key name. Tag
