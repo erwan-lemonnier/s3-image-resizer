@@ -25,9 +25,6 @@ GIT_COUNT=$(git rev-list HEAD --count)
 VERSION="0.0.$GIT_COUNT"
 echo "=> VERSION=$VERSION"
 
-echo "=> Running nosetests"
-nosetests
-
 echo "=> Build+Upload dist"
 python setup.py sdist upload -r pypi --version $VERSION
 
