@@ -71,7 +71,7 @@ class S3ImageResizer(object):
         return clone
 
 
-    def store(self, in_bucket=None, key_name=None, metadata=None):
+    def store(self, in_bucket=None, key_name=None, metadata=None, quality=100):
         """Store the loaded image into the given bucket with the given key name. Tag
         it with metadata if provided. Make the Image public and return its url"""
         if not in_bucket:
@@ -91,7 +91,7 @@ class S3ImageResizer(object):
 
         # Export image to a string
         sio = StringIO()
-        self.image.save(sio, 'JPEG')
+        self.image.save(sio, 'JPEG', quality=quality)
         contents = sio.getvalue()
         sio.close()
 
