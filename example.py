@@ -38,7 +38,7 @@ conn = s3.connect_to_region(
 
 i = S3ImageResizer(conn)
 
-i.fetch('http://www.gokqsw.com/images/picture/picture-4.jpg')
+i.fetch('https://d32489svrsv5tt.cloudfront.net/BAGARE-tenn-Firma-Svenskt-Tenn-1930_SE_2016-11-12.jpg')
 
 url = i.store(
     in_bucket=BUCKET_NAME,

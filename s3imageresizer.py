@@ -39,7 +39,17 @@ class S3ImageResizer(object):
         res = requests.get(url)
         if res.status_code != 200:
             raise CantFetchImageException("Failed to load image at url %s" % url)
-        self.image = Image.open(StringIO(res.content))
+        image = Image.open(StringIO(res.content))
+
+        # Make sure Pillow does not ignore alpha channels during conversion
+        # See http://twigstechtips.blogspot.se/2011/12/python-converting-transparent-areas-in.html
+        image = image.convert("RGBA")
+
+        canvas = Image.new('RGBA', image.size, (255,255,255,255))
+        canvas.paste(image, mask=image)
+        self.image = canvas
+
+        return self
 
 
     def resize(self, width=None, height=None):
