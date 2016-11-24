@@ -2,19 +2,18 @@
 
 A python module to import and resize pictures into amazon S3 storage.
 
-## Warning
-
-This module is a MVP. It works fine on its golden path, which is importing
-jpegs from well-behaved CDNs, resizing them in memory and storing the results
-in S3.
-
 ## Synopsis
 
-Typical usecase:
+Typical usecase: fetch a bunch of image and generate thumbnails of various
+sizes for each of them, stored in S3.
 
 ```
+from s3imageresizer import S3ImageResizer
+
+from boto import s3
+s3_conn = s3.connect_to_region(...)
+
 # Initialize an S3ImageResizer:
-# s3_conn = s3.connect_to_region(...)
 i = S3ImageResizer(s3_conn)
 
 urls = [
@@ -24,11 +23,10 @@ urls = [
 
 for url in urls:
 
-    # Fetch an image into memory
+    # Fetch image into memory
     i.fetch(url)
 
-    # Resize the image and store it to S3, and discard the resized
-    # image once stored
+    # Resize this image, store it to S3 and return its url
     url1 = i.resize(
         width=200
     ).store(
@@ -36,14 +34,24 @@ for url in urls:
         key_name='image-w200-jpg'
     )
 
-    # And once more, with a different size
+    # Do it again, with a different size
     url2 = i.resize(
-        height=200
+        height=400
     ).store(
         in_bucket='my-images',
         key_name='image-h200-jpg'
     )
 ```
+
+## More explanation
+
+For method parameters, see the code (there isn't much of it ;-)
+
+S3ImageResizer does all image operations in-memory, without writing images to
+local files.
+
+S3ImageResizer uses PIL, has reasonable defaults for downsizing images and
+handle images with alpha channels nicely.
 
 ## Installation
 
