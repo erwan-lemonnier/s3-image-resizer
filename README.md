@@ -26,6 +26,9 @@ for url in urls:
     # Fetch image into memory
     i.fetch(url)
 
+    # Apply the image EXIF rotation, if any
+    i.orientate()
+
     # Resize this image, store it to S3 and return its url
     url1 = i.resize(
         width=200

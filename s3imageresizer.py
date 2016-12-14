@@ -1,7 +1,7 @@
 import logging
 import requests
 from io import BytesIO
-from PIL import Image
+from PIL import Image, ExifTags
 from StringIO import StringIO
 from boto import s3
 from boto.s3.key import Key
@@ -30,6 +30,7 @@ class S3ImageResizer(object):
             raise InvalidParameterException("Expecting an instance of boto s3 connection")
         self.s3_conn = s3_conn
         self.image = None
+        self.exif_tags = {}
 
 
     def fetch(self, url):
@@ -41,6 +42,11 @@ class S3ImageResizer(object):
             raise CantFetchImageException("Failed to load image at url %s" % url)
         image = Image.open(StringIO(res.content))
 
+        # Fetch exif tags (if any)
+        if image._getexif():
+            tags = dict((ExifTags.TAGS[k].lower(), v) for k, v in image._getexif().items() if k in ExifTags.TAGS)
+            self.exif_tags = tags
+
         # Make sure Pillow does not ignore alpha channels during conversion
         # See http://twigstechtips.blogspot.se/2011/12/python-converting-transparent-areas-in.html
         image = image.convert("RGBA")
@@ -49,6 +55,39 @@ class S3ImageResizer(object):
         canvas.paste(image, mask=image)
         self.image = canvas
 
+        return self
+
+
+    def orientate(self):
+        """Apply exif orientation, if any"""
+
+        log.debug("Image has exif tags: %s" % self.exif_tags)
+
+        # No exif orientation?
+        if 'orientation' not in self.exif_tags:
+            log.info("No exif orientation known for this image")
+            return self
+
+        # If image has an exif rotation, apply it to the image prior to resizing
+        # See http://stackoverflow.com/questions/4228530/pil-thumbnail-is-rotating-my-image
+
+        angle = self.exif_tags['orientation']
+        log.info("Applying exif orientation %s to image" % angle)
+        angle_to_degrees = [
+            # orientation = transformation
+            lambda i: i,
+            lambda i: i.transpose(Image.FLIP_LEFT_RIGHT),
+            lambda i: i.transpose(Image.ROTATE_180),
+            lambda i: i.transpose(Image.FLIP_TOP_BOTTOM),
+            lambda i: i.transpose(Image.ROTATE_90).transpose(Image.FLIP_LEFT_RIGHT),
+            lambda i: i.transpose(Image.ROTATE_270),
+            lambda i: i.transpose(Image.ROTATE_90).transpose(Image.FLIP_TOP_BOTTOM),
+            lambda i: i.transpose(Image.ROTATE_90),
+        ]
+
+        assert angle >= 1 and angle <= 8
+        f = angle_to_degrees[angle - 1]
+        self.image = f(self.image)
         return self
 
 
@@ -98,6 +137,8 @@ class S3ImageResizer(object):
             metadata = {}
 
         metadata['Content-Type'] = 'image/jpeg'
+
+        log.info("Storing image into bucket %s/%s" % (in_bucket, key_name))
 
         # Export image to a string
         sio = StringIO()

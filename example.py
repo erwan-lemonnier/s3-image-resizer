@@ -38,7 +38,7 @@ conn = s3.connect_to_region(
 
 i = S3ImageResizer(conn)
 
-i.fetch('https://d32489svrsv5tt.cloudfront.net/BAGARE-tenn-Firma-Svenskt-Tenn-1930_SE_2016-11-12.jpg')
+i.fetch('http://s3-eu-west-1.amazonaws.com/pnt-item-pictures-incoming/item_58412fc768022a5112b0b110_000002/0.jpg')
 
 url = i.store(
     in_bucket=BUCKET_NAME,
@@ -49,6 +49,9 @@ log.info("Got url %s" % url)
 # Should be 'https://pnt-tests.s3-eu-west-1.amazonaws.com/raw.jpg'
 want = 'https://%s.s3-%s.amazonaws.com/%s' % (BUCKET_NAME, S3_REGION, 'raw.jpg')
 assert url == want, '%s == %s' % (url, want)
+
+# apply exif orientation, if any
+i.orientate()
 
 # resize to width 200
 ii = i.resize(width=200)
