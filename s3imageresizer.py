@@ -2,7 +2,6 @@ import logging
 import requests
 from io import BytesIO
 from PIL import Image, ExifTags
-from io import StringIO
 from boto import s3
 from boto.s3.key import Key
 
@@ -40,7 +39,7 @@ class S3ImageResizer(object):
         res = requests.get(url)
         if res.status_code != 200:
             raise CantFetchImageException("Failed to load image at url %s" % url)
-        image = Image.open(StringIO(res.content))
+        image = Image.open(BytesIO(res.content))
 
         # Fetch exif tags (if any)
         if image._getexif():
@@ -141,7 +140,7 @@ class S3ImageResizer(object):
         log.info("Storing image into bucket %s/%s" % (in_bucket, key_name))
 
         # Export image to a string
-        sio = StringIO()
+        sio = BytesIO()
         self.image.save(sio, 'JPEG', quality=quality)
         contents = sio.getvalue()
         sio.close()

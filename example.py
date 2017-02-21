@@ -47,7 +47,7 @@ url = i.store(
 log.info("Got url %s" % url)
 
 # Should be 'https://pnt-tests.s3-eu-west-1.amazonaws.com/raw.jpg'
-want = 'https://%s.s3-%s.amazonaws.com/%s' % (BUCKET_NAME, S3_REGION, 'raw.jpg')
+want = 'https://%s.s3-%s.amazonaws.com:443/%s' % (BUCKET_NAME, S3_REGION, 'raw.jpg')
 assert url == want, '%s == %s' % (url, want)
 
 # apply exif orientation, if any
@@ -62,7 +62,7 @@ url_w200 = ii.store(
 log.info("Got url %s" % url_w200)
 
 # Should get 'https://pnt-tests.s3-eu-west-1.amazonaws.com/raw_w200.jpg'
-want = 'https://%s.s3-%s.amazonaws.com/%s' % (BUCKET_NAME, S3_REGION, 'raw_w200.jpg')
+want = 'https://%s.s3-%s.amazonaws.com:443/%s' % (BUCKET_NAME, S3_REGION, 'raw_w200.jpg')
 assert url_w200 == want, '%s == %s' % (url_w200, want)
 
 # resize to height 200
