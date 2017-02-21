@@ -2,7 +2,7 @@ import logging
 import requests
 from io import BytesIO
 from PIL import Image, ExifTags
-from StringIO import StringIO
+from io import StringIO
 from boto import s3
 from boto.s3.key import Key
 
@@ -44,7 +44,7 @@ class S3ImageResizer(object):
 
         # Fetch exif tags (if any)
         if image._getexif():
-            tags = dict((ExifTags.TAGS[k].lower(), v) for k, v in image._getexif().items() if k in ExifTags.TAGS)
+            tags = dict((ExifTags.TAGS[k].lower(), v) for k, v in list(image._getexif().items()) if k in ExifTags.TAGS)
             self.exif_tags = tags
 
         # Make sure Pillow does not ignore alpha channels during conversion
