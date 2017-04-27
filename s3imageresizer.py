@@ -141,7 +141,7 @@ class S3ImageResizer(object):
 
         # Export image to a string
         sio = BytesIO()
-        self.image.save(sio, 'JPEG', quality=quality)
+        self.image.save(sio, 'JPEG', quality=quality, optimize=True)
         contents = sio.getvalue()
         sio.close()
 
