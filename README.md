@@ -73,6 +73,6 @@ pip install s3imageresizer
 
 ## Author
 
-Erwan Lemonnier
-[github.com/erwan-lemonnier](https://github.com/erwan-lemonnier)
+Erwan Lemonnier<br/>
+[github.com/erwan-lemonnier](https://github.com/erwan-lemonnier)<br/>
 [www.linkedin.com/in/erwan-lemonnier/](https://www.linkedin.com/in/erwan-lemonnier/)
