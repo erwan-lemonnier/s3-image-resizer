@@ -36,13 +36,13 @@ with open(path.join(this_directory, 'README.md'), encoding='utf-8') as f:
 setup(
     name='s3imageresizer',
     version=version,
-    long_description=long_description,
-    long_description_content_type='text/markdown',
     url='https://github.com/erwan-lemonnier/s3imageresizer',
     license='BSD',
     author='Erwan Lemonnier',
     author_email='erwan@lemonnier.se',
     description='Import and resize pictures into amazon S3 storage',
+    long_description="# just a test",
+    long_description_content_type='text/markdown',
     install_requires=[
         'Pillow',
         'boto',
