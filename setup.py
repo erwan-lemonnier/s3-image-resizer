@@ -41,7 +41,7 @@ setup(
     author='Erwan Lemonnier',
     author_email='erwan@lemonnier.se',
     description='Import and resize pictures into amazon S3 storage',
-    long_description="# just a test",
+    long_description=long_description,
     long_description_content_type='text/markdown',
     install_requires=[
         'Pillow',
