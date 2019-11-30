@@ -51,7 +51,7 @@ for url in urls:
 For method parameters, see the code (there isn't much of it ;-)
 
 S3ImageResizer does all image operations in-memory, without writing images to
-local files.
+disk.
 
 S3ImageResizer uses PIL, has reasonable defaults for downsizing images and
 handle images with alpha channels nicely.
@@ -70,3 +70,7 @@ Then
 ```
 pip install s3imageresizer
 ```
+
+## Author
+
+erwan at lemonnier dot se ([www.linkedin.com/in/erwan-lemonnier](https://www.linkedin.com/in/erwan-lemonnier/))
