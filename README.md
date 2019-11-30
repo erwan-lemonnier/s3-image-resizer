@@ -71,6 +71,10 @@ Then
 pip install s3imageresizer
 ```
 
+## Source code
+
+[https://github.com/erwan-lemonnier/s3-image-resizer](https://github.com/erwan-lemonnier/s3-image-resizer)
+
 ## Author
 
 Erwan Lemonnier<br/>
